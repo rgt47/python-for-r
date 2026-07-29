@@ -110,6 +110,18 @@ python analysis.py          # run a script
 We orient briefly on when to reach for each, and note that
 production analysis usually lives in scripts, not notebooks.
 
+For an editor we recommend Positron, Posit's data science IDE,
+ahead of the classic Jupyter interface. Positron will feel
+familiar to an RStudio user: it offers the same
+script-and-console workflow, a Variables pane, and a Data
+Explorer for pandas data frames, and it edits and runs both
+`.py` scripts and `.ipynb` notebooks in one place. It is
+multilingual, so the reader's R and Python work live in a single
+environment. A reader who prefers a notebook-only experience may
+still use Jupyter, but for an R user coming from RStudio, Positron
+is the more natural home, and it is the environment we recommend
+throughout this book.
+
 ### import versus library()
 
 In R, `library(dplyr)` attaches a package and makes its
@@ -262,7 +274,8 @@ you can experiment freely.
 
 7. **REPL, script, notebook.** Write a two-line computation,
    run it three ways (REPL, `.py` script, and a notebook cell
-   if you have Jupyter), and note one advantage of each.
+   in Positron, or in Jupyter if you prefer), and note one
+   advantage of each.
 
 ## Solutions
 
