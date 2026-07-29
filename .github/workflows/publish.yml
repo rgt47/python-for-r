@@ -17,6 +17,14 @@ jobs:
         with:
           version: '1.5.57'
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Jupyter
+        run: pip install jupyter
+
       - name: Render book (HTML)
         run: quarto render --to html
 
