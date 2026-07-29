@@ -1,0 +1,269 @@
+# Day 5: Reproducible Python Projects and Interoperability {#sec-day5}
+
+## Learning objectives
+
+::: {.callout-note}
+## Learning objectives
+
+By the end of this day you should be able to:
+
+- Lay out a Python project directory and relate it to an R
+  package or research compendium.
+- Pin dependencies with `uv`, `requirements.txt`, and conda,
+  and relate each to `renv.lock`.
+- Write and run tests with `pytest` and relate them to
+  `tinytest` and `testthat`.
+- Author a Quarto document with Python code cells.
+- Call R from Python and Python from R, choosing a direction
+  for a given task.
+- Migrate a small R analysis to Python end to end.
+:::
+
+## Lecture
+
+We begin with project structure, since a reproducible analysis
+is a matter of layout and pinning before it is a matter of
+code.
+
+### Project structure
+
+A Python analysis benefits from the same discipline an R user
+applies to a research compendium: a clear directory layout with
+code, data, and outputs separated. We describe a minimal
+layout and relate each part to its R counterpart.
+
+```text
+project/
+  pyproject.toml        # project + dependency metadata
+  src/analysis/         # importable package code
+  tests/                # pytest tests
+  data/                 # inputs (often gitignored)
+  notebooks/            # exploratory work
+```
+
+We note the parallel to an R package's `R/`, `tests/`, and
+`DESCRIPTION`, and to a zzcollab-style compendium.
+
+### Environments and lockfiles
+
+Reproducibility requires pinning versions, the role `renv.lock`
+plays in R. Python offers several mechanisms, and the reader
+will meet all of them.
+
+```bash
+uv lock                       # write uv.lock (preferred)
+uv pip freeze > requirements.txt   # a portable pin
+conda env export > environment.yml # the conda equivalent
+```
+
+```r
+renv::snapshot()              # write renv.lock
+```
+
+::: {.callout-tip}
+## Tip
+
+Treat `uv.lock` (or a committed `requirements.txt`) as the
+Python `renv.lock`: commit it, and recreate the environment
+from it on another machine rather than reinstalling by hand.
+:::
+
+### Testing with pytest
+
+Automated tests are as valuable in Python as in R. `pytest`
+discovers functions named `test_*` and runs them, reporting
+failures. An R user should read it as the counterpart of
+`tinytest` or `testthat`.
+
+```python
+# tests/test_summary.py
+from analysis.summary import mean_age
+
+def test_mean_age():
+    assert mean_age([30, 40, 50]) == 40
+```
+
+```r
+# tinytest
+expect_equal(mean_age(c(30, 40, 50)), 40)
+```
+
+```bash
+pytest                        # discover and run all tests
+```
+
+### Quarto with Python
+
+Quarto renders documents with Python code cells exactly as it
+renders R cells, so the reader's Quarto experience transfers
+directly. A cell is marked with `{python}` in place of `{r}`.
+
+````text
+```{python}
+import pandas as pd
+pd.DataFrame({'x': [1, 2, 3]}).describe()
+```
+````
+
+We note that a single Quarto project can mix R and Python
+cells, which is often the cleanest path during a migration.
+
+### Calling R from Python and Python from R
+
+Interoperability runs in both directions. From R, `reticulate`
+calls Python, as we saw on Day 4. From Python, the `rpy2`
+package calls R, so an established R routine can be invoked
+without rewriting it.
+
+```python
+import rpy2.robjects as ro
+ro.r('summary(c(1, 2, 3))')
+```
+
+```r
+reticulate::py_run_string('x = [1, 2, 3]')
+```
+
+We answer the natural question of direction: keep the analysis
+in whichever language holds most of its logic, and cross the
+boundary only for the specific component the other language
+serves better.
+
+### A note on migration strategy
+
+We close the lecture with a strategy rather than a command. A
+migration need not be all-or-nothing. The safe path is to move
+one component at a time, checking each Python result against
+the R result it replaces, until the R code is either gone or
+deliberately retained behind an interoperability call.
+
+## Worked example: migrating a small R analysis to Python
+
+We take a compact R analysis the reader could have written on
+any project, reading a CSV, filtering, summarizing by group,
+and fitting a model, and migrate it to Python step by step,
+verifying as we go.
+
+The R original:
+
+```r
+enroll <- readr::read_csv('enroll.csv')
+summary_tbl <- enroll |>
+  dplyr::filter(age > 30) |>
+  dplyr::group_by(arm) |>
+  dplyr::summarize(mean_wt = mean(weight))
+fit <- lm(weight ~ age + arm, data = enroll)
+```
+
+The Python migration, component by component, keeps each step
+beside the R line it replaces:
+
+```python
+import pandas as pd
+import statsmodels.formula.api as smf
+
+enroll = pd.read_csv('enroll.csv')
+
+summary_tbl = (
+    enroll
+    .loc[enroll['age'] > 30]
+    .groupby('arm')
+    .agg(mean_wt=('weight', 'mean'))
+    .reset_index()
+)
+
+fit = smf.ols('weight ~ age + arm', data=enroll).fit()
+```
+
+We verify the migration by comparing outputs, not by
+inspection alone. The grouped means should match the R
+`summary_tbl` row for row, and the fitted coefficients should
+match `coef(fit)` from R to several decimal places. Where they
+disagree, the usual culprits are a different default (for
+example, a standard deviation divisor) or an index carried
+along silently, both of which we met earlier in the week. When
+the numbers agree, the migration is done, and the reader now
+has the same analysis in a second language.
+
+## Homework
+
+Attempt each problem before checking the solution.
+
+1. **Project skeleton.** Create a project directory with the
+   layout shown in the lecture. State which parts correspond
+   to an R package's `R/`, `tests/`, and `DESCRIPTION`.
+
+2. **Pin an environment.** In a fresh environment, install two
+   packages and write a lockfile with `uv lock` (or a
+   `requirements.txt`). Explain what committing that file buys
+   you, in the language of `renv.lock`.
+
+3. **Recreate an environment.** From the lockfile of problem
+   2, recreate the environment in a new directory and confirm
+   the same versions install. Name the `renv` step that
+   corresponds.
+
+4. **Write a test.** Write a small function and a `pytest`
+   test for it, then run `pytest` and read the report. Show
+   the `tinytest` assertion that would test the same behavior.
+
+5. **A failing test.** Deliberately break the function so the
+   test fails, and read what `pytest` reports. Compare the
+   failure output with what `tinytest` reports.
+
+6. **Quarto with Python.** Write a one-cell Quarto document
+   with a `{python}` cell that prints a small `DataFrame`, and
+   render it. Note what changed relative to an `{r}` cell.
+
+7. **Round trip.** Using `reticulate` from R or `rpy2` from
+   Python, compute a value in the other language and bring it
+   back. Describe when you would choose each direction.
+
+8. **A full migration.** Take a short R script of your own
+   (read, transform, summarize) and migrate it to Python,
+   verifying each intermediate result against the R output.
+   Report the one step that required the most care.
+
+## Solutions
+
+::: {.callout-note icon=false collapse=true}
+## Solutions
+
+**Problem 1.** Placeholder: `src/analysis/` maps to `R/`,
+`tests/` maps to `tests/`, and `pyproject.toml` maps to
+`DESCRIPTION`.
+
+**Problem 2.** Placeholder: `uv lock` writes `uv.lock`;
+committing it fixes exact versions as `renv.lock` does.
+
+**Problem 3.** Placeholder: `uv sync` from the lockfile,
+matching `renv::restore()`.
+
+**Problem 4.** Placeholder: a `test_*` function using
+`assert`; the `tinytest` form is `expect_equal(...)`.
+
+**Problem 5.** Placeholder: `pytest` prints the failing
+assertion with the observed and expected values.
+
+**Problem 6.** Placeholder: only the cell language tag changes
+from `{r}` to `{python}`.
+
+**Problem 7.** Placeholder: use `reticulate` when the analysis
+lives in R and borrows Python; use `rpy2` when it lives in
+Python and borrows R.
+
+**Problem 8.** Placeholder: the step needing most care is
+typically a silent default difference or a carried index.
+:::
+
+## What's next
+
+This is the final day of the workshop. The reader can now read
+and write everyday scientific Python and move an analysis
+between R and Python in either direction. To go further, the
+companion volume *Statistical Computing in the Age of AI*
+(<https://scai.rgtlab.org>) develops the statistical methods
+these tools implement, and *Applied Generative AI for Health
+Sciences Research* (<https://applied-genai.rgtlab.org>) takes
+up the deep-learning and large-language-model libraries that
+this workshop deliberately set aside.

@@ -1,0 +1,247 @@
+# Day 4: Visualization, Modeling, and the Scientific Stack {#sec-day4}
+
+## Learning objectives
+
+::: {.callout-note}
+## Learning objectives
+
+By the end of this day you should be able to:
+
+- Produce a plot with matplotlib and seaborn, and reproduce a
+  `ggplot2` figure with plotnine.
+- Fit a linear or generalized linear model with the
+  statsmodels formula API and read its summary against `lm`
+  and `glm`.
+- Fit and evaluate a simple model with scikit-learn and
+  explain its estimator interface.
+- Run common tests and distributions from `scipy.stats`.
+- Call Python from R with `reticulate` and describe when
+  interoperability is preferable to reimplementation.
+:::
+
+## Lecture
+
+We begin with visualization, since it is where the R user's
+`ggplot2` fluency transfers most directly, then move to
+modeling.
+
+### matplotlib, seaborn, and plotnine versus ggplot2
+
+Python offers three plotting styles worth knowing. matplotlib
+is the low-level engine, verbose but complete. seaborn is a
+statistical layer over it, concise for common charts. plotnine
+is a near-literal port of `ggplot2`, so an R user can often
+paste a grammar-of-graphics figure with minimal change.
+
+```python
+import seaborn as sns
+sns.scatterplot(data=df, x='age', y='weight', hue='arm')
+```
+
+```python
+from plotnine import ggplot, aes, geom_point
+(ggplot(df, aes('age', 'weight', color='arm')) + geom_point())
+```
+
+```r
+ggplot2::ggplot(df, ggplot2::aes(age, weight, color = arm)) +
+  ggplot2::geom_point()
+```
+
+::: {.callout-tip}
+## Tip
+
+If you think in the grammar of graphics, start with plotnine;
+the translation cost from `ggplot2` is nearly zero. Reach for
+seaborn when you want a common statistical chart in one line.
+:::
+
+### statsmodels formula API versus lm and glm
+
+statsmodels offers a formula interface that an R user will find
+familiar, including the `y ~ x1 + x2` notation and a
+regression summary table.
+
+```python
+import statsmodels.formula.api as smf
+model = smf.ols('weight ~ age + arm', data=df).fit()
+model.summary()
+```
+
+```r
+model <- lm(weight ~ age + arm, data = df)
+summary(model)
+```
+
+Generalized linear models follow the same shape, with a family
+argument that parallels R's `family=`.
+
+```python
+smf.glm('event ~ age', data=df,
+        family=sm.families.Binomial()).fit()
+```
+
+### scikit-learn basics
+
+scikit-learn is oriented toward prediction rather than
+inference, and its estimators share one interface: construct,
+`fit`, then `predict`. An R user should read it as closer to
+`caret` or `tidymodels` than to `lm`.
+
+```python
+from sklearn.linear_model import LinearRegression
+X = df[['age']]
+y = df['weight']
+reg = LinearRegression().fit(X, y)
+reg.predict(X)
+```
+
+We note that scikit-learn expects a two-dimensional feature
+matrix `X` and a one-dimensional target `y`, and that it does
+not print a coefficient table by default; its focus is the
+fitted predictor, not the inferential summary.
+
+### scipy.stats
+
+`scipy.stats` provides distributions and classical tests, the
+counterpart of R's `d/p/q/r` functions and its test suite.
+
+```python
+from scipy import stats
+stats.ttest_ind(group_a, group_b)
+stats.norm.ppf(0.975)              # ~ qnorm(0.975) in R
+```
+
+### reticulate for interoperability
+
+Interoperability is often preferable to rewriting. The R
+package `reticulate` lets an R session call Python directly, so
+a team can keep an analysis in R while borrowing a single
+Python component.
+
+```r
+library(reticulate)
+np <- import('numpy')
+np$mean(c(1, 2, 3))
+```
+
+We note the design question this raises, and answer it: rewrite
+only when the component is small and central; otherwise call
+across the boundary and keep each piece in the language that
+serves it.
+
+## Worked example: a fitted model and its diagnostic plot
+
+We take a task an R user would write with `lm` and `ggplot2`,
+fitting weight on age and arm and plotting the fit, and build
+it with statsmodels and plotnine so both halves mirror the R
+workflow.
+
+The R version:
+
+```r
+fit <- lm(weight ~ age + arm, data = enroll)
+summary(fit)
+ggplot2::ggplot(enroll, ggplot2::aes(age, weight)) +
+  ggplot2::geom_point() +
+  ggplot2::geom_smooth(method = 'lm')
+```
+
+The Python translation keeps the formula and the grammar of
+graphics intact:
+
+```python
+import statsmodels.formula.api as smf
+from plotnine import ggplot, aes, geom_point, geom_smooth
+
+fit = smf.ols('weight ~ age + arm', data=enroll).fit()
+print(fit.summary())
+
+(
+    ggplot(enroll, aes('age', 'weight'))
+    + geom_point()
+    + geom_smooth(method='lm')
+)
+```
+
+We note that the formula string, the summary table, and the
+plot layers each have a one-to-one R counterpart. The reader
+who knows `lm` and `ggplot2` is, in effect, already reading
+this Python; only the surrounding syntax has changed.
+
+## Homework
+
+Attempt each problem before checking the solution.
+
+1. **A first plot.** Using seaborn, draw a scatterplot of two
+   numeric columns colored by a categorical column. Then draw
+   the same figure with plotnine and note which felt closer to
+   `ggplot2`.
+
+2. **Faceting.** Extend the plotnine figure with a facet by a
+   grouping variable. Show the `ggplot2::facet_wrap` call it
+   corresponds to.
+
+3. **Linear model.** Fit a linear model with statsmodels using
+   a formula with two predictors. Read off the coefficient
+   estimates and compare the printed summary with `summary()`
+   on the R fit.
+
+4. **Logistic regression.** Fit a logistic regression with the
+   statsmodels GLM interface. Name the `family` argument and
+   its R counterpart.
+
+5. **scikit-learn.** Fit a `LinearRegression` to the same data
+   as problem 3. Extract the coefficients and explain why the
+   scikit-learn output differs in emphasis from the
+   statsmodels output.
+
+6. **A classical test.** Use `scipy.stats` to run a two-sample
+   t-test and to compute a normal quantile. State the R
+   functions that match each.
+
+7. **Interoperability.** From an R session, use `reticulate`
+   to call a NumPy function on an R vector. Describe one
+   situation where you would prefer this to rewriting the
+   computation in R.
+
+## Solutions
+
+::: {.callout-note icon=false collapse=true}
+## Solutions
+
+**Problem 1.** Placeholder: `sns.scatterplot(...)` versus a
+plotnine `ggplot(...) + geom_point()`; plotnine mirrors
+`ggplot2` most closely.
+
+**Problem 2.** Placeholder: add `+ facet_wrap('~ group')`,
+matching `ggplot2::facet_wrap(~ group)`.
+
+**Problem 3.** Placeholder: `smf.ols('y ~ x1 + x2',
+data=df).fit()`; the coefficient table lines up with
+`summary(lm(...))`.
+
+**Problem 4.** Placeholder:
+`family=sm.families.Binomial()`, matching
+`glm(..., family = binomial)` in R.
+
+**Problem 5.** Placeholder: `LinearRegression().fit(X, y)`
+exposes `.coef_` and `.intercept_`; scikit-learn emphasizes
+prediction, so it omits the inferential table.
+
+**Problem 6.** Placeholder: `stats.ttest_ind` matches
+`t.test`; `stats.norm.ppf` matches `qnorm`.
+
+**Problem 7.** Placeholder: `reticulate::import('numpy')` then
+call the function; prefer interoperability when the component
+is large or has no R equivalent.
+:::
+
+## What's next
+
+Day 5 assembles the pieces into a reproducible project:
+directory structure, environments and lockfiles with `uv`,
+`requirements.txt`, and conda, testing with `pytest`, authoring
+with Quarto and Python, and calling R from Python and Python
+from R. We close with a worked migration of a small R analysis
+to Python.

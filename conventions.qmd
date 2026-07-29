@@ -1,0 +1,119 @@
+# Conventions {.unnumbered}
+
+This page summarizes the visual conventions used throughout
+the book.
+
+## Code and output
+
+This book is example-first. Python code appears in
+syntax-highlighted blocks. Interactive sessions at the Python
+REPL show the `>>>` prompt for input; output appears on the
+following lines, without a prompt:
+
+```python
+>>> 1 + 1
+2
+```
+
+When a block is a script rather than an interactive session,
+the prompts are omitted and the code is shown as it would
+appear in a `.py` file:
+
+```python
+import numpy as np
+x = np.arange(10)
+print(x.mean())
+```
+
+Shell commands appear in their own blocks. A command the
+reader types is shown after a `$` prompt; the prompt itself is
+not typed:
+
+```bash
+$ python --version
+Python 3.12.4
+```
+
+Where a construct has a direct R counterpart, the R idiom is
+shown alongside the Python one for comparison:
+
+```r
+# R
+x <- 1:10
+mean(x)
+```
+
+Inline code, file names, function names, and method names are
+set in `monospace`. Python methods are written with a trailing
+pair of parentheses (`df.head()`) to distinguish them from
+attributes (`df.shape`).
+
+Placeholders that the reader must replace with their own
+values are written in angle brackets, for example
+`pip install <package>` or `import <module>`. The angle
+brackets are not typed.
+
+## Callouts
+
+Three callout types appear:
+
+::: {.callout-tip}
+## Tip
+
+A small practical recommendation.
+:::
+
+::: {.callout-note icon=false collapse=true}
+## Check your understanding: example
+
+A short question testing comprehension of the just-read
+material. Click to expand the answer.
+:::
+
+::: {.callout-warning}
+## Warning
+
+A pitfall the reader may otherwise hit, most often a place
+where an R habit produces a surprising result in Python.
+:::
+
+## Naming the two languages
+
+Throughout, we mark which language a construct belongs to
+whenever it could be ambiguous. Python objects and methods are
+named in full (`list.append()`, not merely `append`) so that
+they are unambiguous. R functions are named with their package
+where it matters (`dplyr::filter`), since the same bare name
+may mean different things in the two languages.
+
+## Cross-references
+
+Within this book, sections are referenced by their Quarto
+label (`@sec-day1`, `@sec-pandas-groupby`). These resolve to
+clickable links in HTML and section numbers in PDF.
+
+References to the companion volumes *R for Biostatistics* and
+*Git and GitHub for Biostatistics* use **prose pointers**
+rather than Quarto cross-references, because cross-references
+do not resolve across separate books. For example: 'see the
+data-frames chapter of the companion *R for Biostatistics*
+volume'.
+
+## Chapter structure
+
+Every content chapter follows the same five-section template:
+
+1. **Learning objectives.** What you will be able to do after
+   the day.
+2. **Lecture.** The substantive content, with code to run in
+   your own Python session as you read.
+3. **Worked example.** A small but realistic scenario that
+   uses the day's content end to end, contrasting the R idiom
+   with the Python idiom.
+4. **Homework.** Problems organized from easier to harder.
+5. **Solutions.** Worked solutions to all homework problems.
+   Read only after attempting the problem.
+
+Each chapter closes with a short **What's next** pointer. The
+pattern repeats deliberately; by the third chapter you know
+where to find each component.

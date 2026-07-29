@@ -1,0 +1,95 @@
+# How to use this book {.unnumbered}
+
+We begin with a short orientation. In this chapter we set out
+the daily cadence, the chapter template, and the conventions
+used throughout, so that the reader knows what to expect.
+
+## The daily cadence
+
+Each day has the same shape:
+
+- **Lecture content (~1 hour).** Read the chapter, running
+  each example in your own Python session as you encounter it.
+  Do not skip the code; the chapter is designed to be read
+  with a REPL open and a scratch script at hand.
+- **Homework (~2 hours).** Five to eight problems, with worked
+  solutions at the end of the chapter. Attempt each problem
+  before checking the solution.
+
+The cadence assumes one chapter per day for five consecutive
+days. The workshop may be compressed (two chapters per day
+across two-and-a-half days) or expanded (one chapter per week
+across a month) depending on the reader's other commitments;
+we leave the choice to the reader.
+
+## Chapter template
+
+Each chapter follows a five-section template, and we shall
+keep to it consistently:
+
+1. **Learning objectives.** A bulleted list of what the reader
+   should be able to do by the end of the day.
+2. **Lecture.** The substantive content for the day, with code
+   to run.
+3. **Worked example.** A small but realistic scenario that
+   uses the day's content end to end, contrasting the R idiom
+   the reader already knows with the Python idiom being
+   learned.
+4. **Homework.** Problems organized from easier to harder.
+5. **Solutions.** Worked solutions to all homework problems.
+   Read only after attempting the problem.
+
+There are no quizzes, no examinations, and no tests in this
+book. Self-assessment proceeds entirely through the homework
+solutions.
+
+## A note on translation
+
+This book teaches Python to a reader who already thinks in R.
+That premise shapes every page:
+
+- We rarely explain a programming concept from first
+  principles. Instead we name the R construct the reader knows
+  (a vector, a data frame, `dplyr::filter`, `purrr::map`) and
+  present its Python counterpart beside it.
+- Where the two languages agree, we say so briefly and move
+  on. Where they differ in a way that trips up R users, we
+  slow down. That is, the differences carry the weight, not
+  the similarities.
+
+Recall that the goal is not to decide which language is
+better. It is to make the reader able to move a given problem
+into whichever language serves it, and back again.
+
+## Conventions
+
+The visual cues used throughout the book are described on the
+[Conventions](conventions.qmd) page. In brief:
+
+- Interactive Python input follows a `>>>` prompt; shell
+  commands follow a `$` prompt; output has no prompt.
+- R code shown for comparison is labeled as such.
+- Placeholders you replace are written in `<angle-brackets>`.
+- Code lines and file listings are wrapped at 78 characters.
+
+## Companion volumes
+
+This workshop is part of a broader curriculum series. The
+volumes most relevant to it are:
+
+- *R for Biostatistics: A One-Week Boot Camp*
+  (<https://r-bootcamp.rgtlab.org>), the source of the R
+  fluency this workshop assumes.
+- *Git and GitHub for Biostatistics: A One-Week Boot Camp*
+  (<https://git-bootcamp.rgtlab.org>), the parallel
+  preparatory volume for version control.
+- *Statistical Computing in the Age of AI*
+  (<https://scai.rgtlab.org>), introductory statistical
+  methods and computing.
+- *Applied Generative AI for Health Sciences Research*
+  (<https://applied-genai.rgtlab.org>), generative AI for
+  research.
+
+The end of Chapter 5 describes how a small R analysis migrates
+to Python and where the reader can carry the two-language
+workflow next.

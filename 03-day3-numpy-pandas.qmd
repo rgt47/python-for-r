@@ -1,0 +1,287 @@
+# Day 3: NumPy and pandas {#sec-day3}
+
+## Learning objectives
+
+::: {.callout-note}
+## Learning objectives
+
+By the end of this day you should be able to:
+
+- Create and operate on NumPy arrays and relate them to R
+  vectors and matrices.
+- Build a pandas `Series` and `DataFrame` and relate them to
+  the R tibble.
+- Select rows and columns with `loc` and `iloc` and relate
+  them to `dplyr::filter` and `dplyr::select`.
+- Aggregate with `groupby` and relate it to `group_by` and
+  `summarize`.
+- Combine tables with `merge` and relate it to `dplyr` joins.
+- Handle missing data and read a method chain as the
+  counterpart of the pipe.
+:::
+
+## Lecture
+
+We begin with NumPy, because pandas is built on it and because
+it restores the vectorized arithmetic an R user expects.
+
+### NumPy arrays versus R vectors and matrices
+
+A NumPy array is a homogeneous, n-dimensional block of numbers.
+A one-dimensional array plays the role of an R atomic vector;
+a two-dimensional array plays the role of an R matrix. Unlike
+a Python `list`, an array vectorizes.
+
+```python
+import numpy as np
+x = np.array([1, 2, 3])
+x * 2                      # array([2, 4, 6]), elementwise
+x.mean()                   # 2.0
+```
+
+```r
+x <- c(1, 2, 3)
+x * 2                      # 2 4 6
+mean(x)
+```
+
+We note that array indexing is zero-based and that
+broadcasting, NumPy's rule for combining arrays of different
+shapes, is the analogue of R's recycling but stricter.
+
+### pandas Series and DataFrame versus the tibble
+
+A pandas `Series` is a one-dimensional labeled array; a
+`DataFrame` is a two-dimensional table of columns, each a
+`Series`. The `DataFrame` is the working counterpart of the
+tibble, with one notable addition: an explicit row index.
+
+```python
+import pandas as pd
+df = pd.DataFrame({
+    'id': [1, 2, 3],
+    'arm': ['A', 'B', 'A'],
+    'age': [34, 41, 29],
+})
+df.head()
+```
+
+```r
+df <- tibble::tibble(
+  id = c(1, 2, 3),
+  arm = c('A', 'B', 'A'),
+  age = c(34, 41, 29)
+)
+```
+
+::: {.callout-warning}
+## Warning
+
+The pandas row index is a feature with no clean tibble
+counterpart. Many surprises for R users trace back to an index
+that is carried along silently; `reset_index()` is often the
+fix.
+
+:::
+
+### Indexing with loc and iloc versus filter and select
+
+pandas separates label-based selection (`loc`) from
+position-based selection (`iloc`). Row filtering uses a boolean
+mask, which reads much like `dplyr::filter`; column selection
+by name reads like `dplyr::select`.
+
+```python
+df.loc[df['age'] > 30]             # filter rows
+df.loc[:, ['id', 'arm']]           # select columns
+df.iloc[0:2]                       # first two rows by position
+```
+
+```r
+dplyr::filter(df, age > 30)
+dplyr::select(df, id, arm)
+```
+
+### groupby versus group_by and summarize
+
+The split-apply-combine pattern an R user knows from
+`group_by` plus `summarize` is `groupby` plus an aggregation in
+pandas.
+
+```python
+df.groupby('arm')['age'].mean()    # mean age by arm
+```
+
+```r
+df |>
+  dplyr::group_by(arm) |>
+  dplyr::summarize(age = mean(age))
+```
+
+### merge versus joins
+
+Table joins use `merge`, whose `how` argument names the join
+type an R user knows from `dplyr::left_join` and its
+relatives.
+
+```python
+pd.merge(df, sites, on='id', how='left')
+```
+
+```r
+dplyr::left_join(df, sites, by = 'id')
+```
+
+### Missing data
+
+pandas marks missing values with `NaN` (and, in newer types,
+`pd.NA`), the counterpart of R's `NA`. We note that most
+pandas aggregations skip missing values by default, which
+matches the behavior of R functions called with `na.rm =
+TRUE`.
+
+```python
+df['age'].isna().sum()             # count missing
+df['age'].fillna(df['age'].mean()) # impute with the mean
+```
+
+### Method chaining versus the pipe
+
+Where R threads a data frame through `dplyr` verbs with the
+pipe, pandas threads a `DataFrame` through methods with a
+chain. Wrapping the chain in parentheses lets it span lines
+readably.
+
+```python
+result = (
+    df
+    .loc[df['age'] > 30]
+    .groupby('arm')['age']
+    .mean()
+)
+```
+
+```r
+result <- df |>
+  dplyr::filter(age > 30) |>
+  dplyr::group_by(arm) |>
+  dplyr::summarize(age = mean(age))
+```
+
+::: {.callout-tip}
+## Tip
+
+Read a pandas method chain exactly as you read a `dplyr`
+pipeline: top to bottom, one verb per line. The parentheses
+are only there to let the chain break across lines.
+:::
+
+## Worked example: a grouped summary end to end
+
+We take a task an R user would write as a `dplyr` pipeline,
+computing mean age by arm among subjects over thirty, and build
+it in pandas so the correspondence is explicit line by line.
+
+The R version the reader already knows:
+
+```r
+enroll |>
+  dplyr::filter(age > 30) |>
+  dplyr::group_by(arm) |>
+  dplyr::summarize(mean_age = mean(age), n = dplyr::n())
+```
+
+The pandas translation, built as a chain:
+
+```python
+summary = (
+    enroll
+    .loc[enroll['age'] > 30]
+    .groupby('arm')
+    .agg(mean_age=('age', 'mean'), n=('age', 'size'))
+    .reset_index()
+)
+summary
+```
+
+We note two points of friction for an R user. First, the
+grouped result carries `arm` in its index, so we call
+`reset_index()` to return it to an ordinary column, recovering
+a tibble-shaped result. Second, the named aggregation syntax
+`agg(mean_age=('age', 'mean'))` is the pandas counterpart of
+naming summaries inside `summarize`. With those two mappings in
+hand, the pipeline and the chain say the same thing.
+
+## Homework
+
+Attempt each problem before checking the solution. Use a small
+`DataFrame` of your own construction unless one is given.
+
+1. **Array arithmetic.** Create a NumPy array of the integers
+   1 through 10 and compute its mean and standard deviation.
+   Show the R vector code that does the same.
+
+2. **Build a DataFrame.** Construct a `DataFrame` with columns
+   `id`, `site`, and `weight` for five subjects. Display its
+   shape and its column dtypes, and name the tibble code that
+   corresponds.
+
+3. **loc versus iloc.** From your `DataFrame`, select the rows
+   where `weight` exceeds its mean using `loc`, and the first
+   three rows using `iloc`. Explain the difference between
+   label-based and position-based selection.
+
+4. **groupby.** Compute the mean `weight` by `site`. Then add
+   a count of subjects per site in the same result. Show the
+   `dplyr` equivalent.
+
+5. **merge.** Build a second table mapping `site` to a region
+   and left-join it onto your subject table. Predict what
+   happens to a subject whose site is absent from the mapping.
+
+6. **Missing data.** Set one `weight` to `NaN`. Count the
+   missing values, then compute the mean with and without the
+   missing value included, and relate the behavior to
+   `na.rm`.
+
+7. **Method chain.** Rewrite problems 3 through 5 as a single
+   parenthesized method chain and compare its readability with
+   the equivalent `dplyr` pipeline.
+
+## Solutions
+
+::: {.callout-note icon=false collapse=true}
+## Solutions
+
+**Problem 1.** Placeholder: `np.arange(1, 11)` with `.mean()`
+and `.std()`; R uses `1:10`, `mean`, and `sd`, noting that
+NumPy's default `std` divides by n rather than n - 1.
+
+**Problem 2.** Placeholder: `pd.DataFrame({...})`; `.shape`
+and `.dtypes` report dimensions and column types, matching
+`dim()` and column classes on a tibble.
+
+**Problem 3.** Placeholder: `df.loc[df['weight'] >
+df['weight'].mean()]` and `df.iloc[0:3]`; `loc` selects by
+label or mask, `iloc` by integer position.
+
+**Problem 4.** Placeholder: `df.groupby('site').agg(mean_w=(
+'weight', 'mean'), n=('weight', 'size'))`.
+
+**Problem 5.** Placeholder: a `how='left'` merge; an unmatched
+site yields `NaN` in the region column.
+
+**Problem 6.** Placeholder: `.isna().sum()` counts missing;
+the mean skips `NaN` by default, matching `na.rm = TRUE`.
+
+**Problem 7.** Placeholder: a single chain wrapped in
+parentheses, one verb per line, read like a pipe.
+:::
+
+## What's next
+
+Day 4 turns to the scientific stack: plotting with matplotlib,
+seaborn, and plotnine as the counterpart of `ggplot2`;
+modeling with the statsmodels formula API as the counterpart
+of `lm` and `glm`; the basics of scikit-learn; `scipy.stats`;
+and `reticulate` for calling Python from R.

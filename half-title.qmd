@@ -1,0 +1,3 @@
+# Python for R Programmers {.unnumbered .unlisted}
+
+*A One-Week Workshop for R Users Learning Python.*

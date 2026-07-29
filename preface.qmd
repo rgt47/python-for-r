@@ -1,0 +1,150 @@
+# Preface {.unnumbered}
+
+This volume is a one-week workshop for readers who are
+already comfortable in R and want to become productive in
+Python. It assumes the R fluency developed in the companion
+volume *R for Biostatistics*; where that book makes a student
+functional in R, this one makes an R user functional in a
+second language. We do not assume any prior Python.
+
+The design constraint is deliberate: five lectures, ten hours
+of homework, and the reader finishes the week able to read and
+write everyday scientific Python and to move an analysis
+between the two languages. The constraint is met by leaning on
+what the reader already knows. Python is a large language; the
+great majority of its surface area is omitted here. What
+remains is the subset that a practicing data analyst uses
+daily, taught by contrast with the R the reader has already
+internalized.
+
+## Why an R user should learn Python
+
+The case for a second language is not that Python is better
+than R. It is that the two languages have different centers of
+gravity, and a researcher who commands both can choose the
+right tool for a given task rather than forcing every task
+into one. Consider three situations a working analyst meets:
+
+- A collaborator ships a model as a scikit-learn pipeline, and
+  the analyst must read, run, and modify it rather than
+  reimplement it.
+- A data source arrives with a Python client library and no R
+  equivalent, so the ingestion step is naturally written in
+  Python.
+- A deep-learning or large-language-model component has no
+  mature R interface, and the surrounding analysis must meet
+  it where it lives.
+
+Each of these is a case where fluency in a second language
+removes a barrier rather than adds one. We note that the goal
+is not to abandon R; it is to make the boundary between the
+two languages a bridge the analyst can cross in either
+direction.
+
+## What this book covers
+
+Five days, one chapter each:
+
+1. **Orientation and setup.** The Python mental model for R
+   users; installing Python with `uv`, `venv`, and conda; the
+   REPL, scripts, and notebooks; `import` versus `library()`;
+   virtual environments versus `renv`; and the key
+   differences (zero-indexing, mutability, significant
+   whitespace, methods on objects rather than functions).
+2. **Data structures and control flow.** `list`, `tuple`,
+   `dict`, and `set` versus R vectors and lists; strings;
+   comprehensions versus vectorization and `purrr`; defining
+   functions with default and variadic arguments; loops and
+   iterables; truthiness; and `None` versus `NA` and `NULL`.
+3. **NumPy and pandas.** NumPy arrays versus R vectors and
+   matrices; the pandas `Series` and `DataFrame` versus the
+   tibble; `loc` and `iloc` versus `dplyr` `filter` and
+   `select`; `groupby` versus `group_by` and `summarize`;
+   `merge` versus joins; missing data; and method chaining
+   versus the pipe.
+4. **Visualization, modeling, and the scientific stack.**
+   matplotlib, seaborn, and plotnine versus `ggplot2`; the
+   statsmodels formula API versus `lm` and `glm`; the basics
+   of scikit-learn; `scipy.stats`; and `reticulate` for
+   interoperability.
+5. **Reproducible projects and interoperability.** Project
+   structure; environments and lockfiles with `uv`,
+   `requirements.txt`, and conda; testing with `pytest` versus
+   `tinytest`; Quarto with Python; calling R from Python and
+   Python from R; and a worked migration of a small R analysis
+   to Python.
+
+Each chapter is approximately 1 hour of reading and worked
+examples plus 2 hours of homework problems with worked
+solutions provided.
+
+## What this book does not cover
+
+The book deliberately omits, and points elsewhere for, nearly
+everything beyond the daily core:
+
+- Python-language internals (the data model in depth,
+  metaclasses, descriptors, the C API), asynchronous
+  programming, and packaging for distribution on PyPI.
+- Deep learning and large-language-model frameworks
+  (PyTorch, TensorFlow, JAX, the transformer libraries). See
+  *Applied Generative AI for Health Sciences Research*.
+- Production engineering (containers, web services, workflow
+  orchestration), which belongs to a software-engineering
+  course rather than a language workshop.
+- The statistical methods themselves. This book teaches the
+  Python that implements methods taught elsewhere; see
+  *Statistical Computing in the Age of AI*.
+
+The workshop is intentionally narrow. The reader finishes Day
+5 able to work fluently in everyday scientific Python, leaving
+the follow-on volumes free to teach the methods and systems
+that surround it.
+
+## How this book is meant to be used
+
+The five-day cadence is the spine. A reader starting the week
+having never run a Python script can finish the week moving an
+analysis between R and Python. The cadence assumes roughly 3
+hours of focused work per day:
+
+- **Hour 1:** Read the chapter, running every example in your
+  own Python session as you reach it. A second language is
+  learned by typing, not by reading.
+- **Hours 2-3:** Complete the homework problems. Solutions are
+  at the end of each chapter; check yourself only after
+  attempting each problem.
+
+The examples in this book are shown for a Unix-style shell
+(macOS Terminal, Linux, or a Unix shell on Windows such as Git
+Bash or WSL). Where a step differs on Windows, the difference
+is noted.
+
+## Prerequisites
+
+The book assumes:
+
+- A working laptop running macOS, Windows, or Linux.
+- Working fluency in R at the level of the companion volume
+  *R for Biostatistics*: vectors, data frames or tibbles,
+  writing functions, `dplyr` and `ggplot2`, and running a
+  script from the console.
+- Basic familiarity with the command line: opening a terminal,
+  changing directories with `cd`, and listing files with `ls`.
+- No prior exposure to Python.
+
+Prior completion of *R for Biostatistics* is the natural
+entry point, since every Python construct here is introduced
+by contrast with its R counterpart. A reader without that R
+background can still follow the Python, but the translational
+scaffolding will do less work for them.
+
+## Acknowledgments
+
+This workshop consolidates patterns developed while teaching R
+users to read and write scientific Python. Wes McKinney's
+*Python for Data Analysis* and Jake VanderPlas's *Python Data
+Science Handbook* provide the technical scaffolding; the
+translational pedagogy reflects experience with what an
+established R user actually needs, as distinct from what a
+first-time programmer needs.

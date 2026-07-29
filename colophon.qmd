@@ -1,0 +1,25 @@
+# Colophon {.unnumbered}
+
+This book was produced with [Quarto](https://quarto.org),
+typeset in [Source Serif 4](https://fonts.adobe.com/fonts/source-serif),
+with code blocks set in [JetBrains
+Mono](https://www.jetbrains.com/lp/mono/). The examples target
+Python 3.11 or later, with NumPy 1.26 or later and pandas 2.0
+or later.
+
+The book is hosted at <https://python-for-r.rgtlab.org>
+on Netlify, with continuous deployment via GitHub Actions
+from the `rgt47/python-for-r` repository on every push to
+`main`. The deployment recipe is in `HOSTING.md`.
+
+The cover is generated procedurally by
+`images/build-cover.R` from a watercolor gradient anchored
+on `#4b6584` (the volume's brand slate) and overlaid with
+Avenir typography. Re-running the script regenerates the
+cover; the procedural approach makes the cover reproducible
+and editable in version control rather than dependent on a
+one-shot image-generation step. That a book about crossing
+between two languages carries a cover scripted in one of them
+is a small deliberate joke.
+
+Last rendered: see the build timestamp on the homepage.

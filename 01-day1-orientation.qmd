@@ -1,0 +1,309 @@
+# Day 1: Orientation and Setup {#sec-day1}
+
+## Learning objectives
+
+::: {.callout-note}
+## Learning objectives
+
+By the end of this day you should be able to:
+
+- Describe the Python mental model and name the three or four
+  places where it departs sharply from R.
+- Install Python and create an isolated environment with
+  `uv`, `venv`, or conda, and relate each to `renv`.
+- Choose among the REPL, a script, and a notebook for a given
+  task, and run each from the command line.
+- Import functionality with `import` and explain how it
+  differs from `library()`.
+- Predict the effect of zero-indexing, mutability, and
+  significant whitespace on code an R user would otherwise
+  write by habit.
+- Call a method on an object and explain how method syntax
+  differs from R's function-call style.
+:::
+
+## Lecture
+
+We begin with the mental model, because most early confusion
+for an R user is not syntax but a mismatch of expectations. We
+note four departures up front and return to each below.
+
+### The Python mental model for R users
+
+R is a language built around vectors and functions that act on
+whole vectors at once. Python is a language built around
+objects that carry methods, where a plain number is a scalar
+and looping is ordinary. That is, R nudges you toward
+vectorized thinking; Python does not, though its numerical
+libraries restore it. We shall keep this contrast in view all
+week.
+
+```python
+# Python: a scalar is a scalar, not a length-one vector
+x = 3
+type(x)
+```
+
+```r
+# R: everything is a vector; 3 is a length-one numeric vector
+x <- 3
+length(x)
+```
+
+### Installing Python
+
+We recommend `uv`, a fast installer and environment manager
+that plays the role `renv` plays in R. Install it, then use it
+to install a Python version.
+
+```bash
+# install uv (macOS/Linux)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv python install 3.12
+```
+
+The older `venv` module ships with Python itself and is worth
+knowing, and conda remains common in scientific settings. We
+introduce all three so the reader can read any project they
+meet.
+
+```bash
+python -m venv .venv        # the standard-library approach
+```
+
+### Virtual environments versus renv
+
+An R user already understands the problem an environment
+solves: a project should pin its own package versions so that
+it does not break when another project upgrades a dependency.
+That is exactly `renv`. In Python the same discipline is
+carried by a virtual environment, a self-contained directory
+of packages activated per project.
+
+```bash
+uv venv                     # create an environment in .venv
+source .venv/bin/activate   # activate it (Unix shells)
+uv pip install numpy pandas
+```
+
+::: {.callout-tip}
+## Tip
+
+Treat activating an environment as the Python equivalent of
+opening an `renv`-enabled project. Work outside an environment
+only for throwaway experiments.
+:::
+
+### The REPL, scripts, and notebooks
+
+Python offers three ways to run code, and choosing well
+matters. The REPL is the interactive prompt, analogous to the
+R console. A script is a `.py` file run start to finish,
+analogous to `Rscript`. A notebook interleaves code and prose,
+analogous to a Quarto or R Markdown document.
+
+```bash
+python                      # start the REPL
+python analysis.py          # run a script
+```
+
+We orient briefly on when to reach for each, and note that
+production analysis usually lives in scripts, not notebooks.
+
+### import versus library()
+
+In R, `library(dplyr)` attaches a package and makes its
+functions available by bare name. Python's `import` keeps
+names namespaced by default, which an R user should read as a
+feature rather than an inconvenience.
+
+```python
+import numpy as np          # np.array(), np.mean(), ...
+from math import sqrt       # sqrt() by bare name
+```
+
+```r
+library(dplyr)              # filter(), select() by bare name
+```
+
+That is, Python defaults to `package::function` style, where R
+defaults to attaching. We explain the trade-off and the common
+aliases (`np`, `pd`, `plt`) the reader will see everywhere.
+
+### Key differences that trip up R users
+
+We collect here the departures most likely to produce a
+surprising result.
+
+**Zero-indexing.** Python counts from zero, and ranges exclude
+their upper bound.
+
+```python
+xs = [10, 20, 30]
+xs[0]                       # 10, the first element
+xs[0:2]                     # [10, 20], stops before index 2
+```
+
+```r
+xs <- c(10, 20, 30)
+xs[1]                       # 10, R counts from one
+```
+
+**Mutability.** Many Python objects can be changed in place,
+and two names can refer to the same object. R's copy-on-modify
+semantics do not apply.
+
+```python
+a = [1, 2, 3]
+b = a                       # b and a are the same list
+b.append(4)                 # a is now [1, 2, 3, 4] as well
+```
+
+::: {.callout-warning}
+## Warning
+
+Assigning `b = a` for a list does not copy it, unlike R. To
+copy, write `b = a.copy()` or `b = list(a)`. This is the
+single most common source of surprise for R users.
+:::
+
+**Significant whitespace.** Indentation is syntax, not style.
+A block is defined by its indentation rather than by braces.
+
+```python
+if x > 0:
+    print('positive')       # the indentation defines the block
+```
+
+**Objects and methods.** Python calls many operations as
+methods on an object rather than as free functions.
+
+```python
+s = 'hello'
+s.upper()                   # method call: 'HELLO'
+```
+
+```r
+toupper('hello')            # R: a free function
+```
+
+## Worked example: from an R script to a first Python session
+
+We take a task an R user would write without thinking, reading
+a small vector and summarizing it, and reproduce it in Python
+to expose the four departures at once.
+
+In R the reader would write:
+
+```r
+ages <- c(34, 41, 29, 55, 38)
+mean(ages)
+ages[1]
+```
+
+The Python translation, run at the REPL, looks close but
+differs in indexing and in where the summary lives:
+
+```python
+ages = [34, 41, 29, 55, 38]
+sum(ages) / len(ages)       # no built-in vector mean yet
+ages[0]                     # zero-indexed first element
+```
+
+We note that `sum(ages) / len(ages)` is deliberately clumsy:
+it shows that base Python lacks R's vectorized `mean`. On Day
+3 we restore the convenience with NumPy, where `np.mean(ages)`
+recovers the R idiom exactly. For now the point is the mental
+model, not the ergonomics.
+
+Finally, we package the same work as a script and run it from
+the shell, the Python counterpart of `Rscript summary.R`:
+
+```bash
+$ python summary.py
+39.4
+34
+```
+
+## Homework
+
+Attempt each problem in your own Python session before
+checking the solution. Create a scratch environment so that
+you can experiment freely.
+
+1. **Install and verify.** Install `uv`, use it to install
+   Python 3.12, and confirm the version with `python
+   --version`. Report the exact version string you see.
+
+2. **An isolated environment.** Create a virtual environment,
+   activate it, install `numpy`, and confirm from the REPL
+   that `import numpy` succeeds. State the R (`renv`) step
+   that each command corresponds to.
+
+3. **Indexing.** Given `xs = [5, 6, 7, 8, 9]`, write the
+   expressions that return the first element, the last
+   element, and the middle three elements. Explain how each
+   differs from the R equivalent.
+
+4. **Aliasing.** Predict the value of `a` after running
+   `a = [1, 2]; b = a; b.append(3)`. Then predict it after
+   `a = [1, 2]; b = a.copy(); b.append(3)`. Run both and
+   explain the difference in terms of R's copy-on-modify.
+
+5. **Whitespace.** Write a short `if`/`else` that prints
+   `'even'` or `'odd'` for a variable `n`. Then break it
+   deliberately by mis-indenting one line and record the error
+   message Python reports.
+
+6. **Methods versus functions.** For the string
+   `s = 'Trial Data'`, find the method that lowercases it and
+   the method that replaces spaces with underscores. Contrast
+   the calling syntax with the R functions that do the same.
+
+7. **REPL, script, notebook.** Write a two-line computation,
+   run it three ways (REPL, `.py` script, and a notebook cell
+   if you have Jupyter), and note one advantage of each.
+
+## Solutions
+
+::: {.callout-note icon=false collapse=true}
+## Solutions
+
+**Problem 1.** Placeholder: the version string has the form
+`Python 3.12.x`; any 3.11 or later suffices for this book.
+
+**Problem 2.** Placeholder: `uv venv` corresponds to
+`renv::init`, activation corresponds to opening the project,
+and `uv pip install numpy` corresponds to
+`renv::install` plus `renv::snapshot`.
+
+**Problem 3.** Placeholder: `xs[0]`, `xs[-1]`, and `xs[1:4]`;
+the R equivalents are `xs[1]`, `xs[length(xs)]`, and
+`xs[2:4]`, with the index base and half-open range as the
+differences.
+
+**Problem 4.** Placeholder: `[1, 2, 3]` in the first case
+because `b` aliases `a`; `[1, 2]` in the second because
+`.copy()` makes an independent list, which matches R's default
+behavior.
+
+**Problem 5.** Placeholder: the mis-indentation raises an
+`IndentationError` naming the offending line.
+
+**Problem 6.** Placeholder: `s.lower()` and
+`s.replace(' ', '_')`; R uses `tolower(s)` and
+`gsub(' ', '_', s)`.
+
+**Problem 7.** Placeholder: the REPL suits exploration, the
+script suits reproducible runs, and the notebook suits
+narrative reporting.
+:::
+
+## What's next
+
+Day 2 fills in the everyday vocabulary of the language: the
+built-in data structures (`list`, `tuple`, `dict`, `set`),
+strings, comprehensions as the Python answer to vectorization
+and `purrr`, defining functions with default and variadic
+arguments, loops and iterables, truthiness, and how `None`
+relates to R's `NA` and `NULL`.

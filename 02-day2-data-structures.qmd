@@ -1,0 +1,267 @@
+# Day 2: Data Structures and Control Flow {#sec-day2}
+
+## Learning objectives
+
+::: {.callout-note}
+## Learning objectives
+
+By the end of this day you should be able to:
+
+- Choose among `list`, `tuple`, `dict`, and `set` and relate
+  each to R's vectors, lists, and named lists.
+- Manipulate strings with Python's method-based string API.
+- Write a comprehension and explain how it substitutes for R
+  vectorization and `purrr::map`.
+- Define functions with positional, keyword, default, and
+  variadic (`*args`, `**kwargs`) arguments.
+- Write `for` and `while` loops over iterables and explain
+  what makes an object iterable.
+- Reason about truthiness and about `None` in contrast with
+  R's `NA` and `NULL`.
+:::
+
+## Lecture
+
+We begin with the containers, since almost everything else
+builds on them. An R user should read this section as a map
+from four familiar structures to their Python counterparts.
+
+### list, tuple, dict, set
+
+A Python `list` is an ordered, mutable sequence, closest to an
+R list but also doing the work of an atomic vector. A `tuple`
+is an ordered but immutable sequence. A `dict` is a mapping
+from keys to values, closest to a named R list. A `set` is an
+unordered collection of unique elements.
+
+```python
+xs = [1, 2, 3]              # list: ordered, mutable
+pt = (40.7, -74.0)         # tuple: ordered, immutable
+ages = {'ann': 34, 'bo': 41}  # dict: key -> value
+seen = {1, 2, 3}           # set: unique, unordered
+```
+
+```r
+xs <- list(1, 2, 3)        # R list
+ages <- list(ann = 34, bo = 41)  # named list ~ dict
+```
+
+We note that a Python `list` is not vectorized: `xs * 2`
+repeats the list rather than doubling its elements. That
+surprise motivates NumPy on Day 3.
+
+### Strings
+
+Python strings are objects with a rich method API, where R
+leans on functions from base and `stringr`.
+
+```python
+s = 'Trial 001'
+s.lower()                  # 'trial 001'
+s.split(' ')               # ['Trial', '001']
+f'subject {s}'             # f-string interpolation
+```
+
+```r
+tolower('Trial 001')
+strsplit('Trial 001', ' ')
+```
+
+### Comprehensions versus vectorization and purrr
+
+Because base Python does not vectorize, the idiomatic way to
+transform a sequence is a comprehension, which an R user should
+read as the counterpart of `purrr::map` or of vectorized
+arithmetic.
+
+```python
+squares = [x**2 for x in range(5)]      # [0, 1, 4, 9, 16]
+evens = [x for x in range(10) if x % 2 == 0]
+```
+
+```r
+squares <- (0:4)^2                       # vectorized
+evens <- purrr::keep(0:9, ~ .x %% 2 == 0)
+```
+
+::: {.callout-tip}
+## Tip
+
+Read a list comprehension right after its opening bracket: the
+expression on the left is 'what to keep', the `for` clause is
+'over what', and the optional `if` clause is 'when'. This maps
+cleanly onto `map` plus `filter`.
+:::
+
+### Defining functions
+
+Functions are defined with `def`. Arguments may be positional
+or keyword, may carry defaults, and may be gathered variadically
+with `*args` and `**kwargs`.
+
+```python
+def summarize(x, trim=0.0, *args, **kwargs):
+    # body indented; last expression is not auto-returned
+    return sum(x) / len(x)
+```
+
+```r
+summarize <- function(x, trim = 0, ...) {
+  mean(x, trim = trim)
+}
+```
+
+::: {.callout-warning}
+## Warning
+
+Python does not return the last expression implicitly; an R
+habit of relying on that will return `None`. Write an explicit
+`return`.
+:::
+
+We also note the classic pitfall of a mutable default argument
+and show the safe `None` sentinel pattern.
+
+### Loops and iterables
+
+Looping is ordinary and idiomatic in Python, unlike in R where
+it is often avoided in favor of vectorization. An object is
+iterable if it can be consumed by a `for` loop.
+
+```python
+for name, age in ages.items():
+    print(name, age)
+
+i = 0
+while i < 3:
+    i += 1
+```
+
+### Truthiness, None, NA, NULL
+
+Python treats empty containers, zero, and `None` as false in a
+boolean context. `None` is the single 'no value' object, and
+it is worth mapping carefully onto R's two distinct notions.
+
+```python
+if not xs:                 # true when xs is empty
+    print('empty')
+value = None               # absence of a value
+```
+
+We note the mapping: Python's `None` is closest to R's `NULL`
+(a genuine absence), whereas R's `NA` (a present-but-missing
+measurement) has its most faithful counterpart later, in
+pandas and NumPy missing-data markers, covered on Day 3.
+
+## Worked example: tallying subjects by arm
+
+We take a task an R user would solve with `table()` and a named
+list, counting trial subjects by treatment arm, and write it in
+idiomatic Python using a `dict` and a comprehension.
+
+In R:
+
+```r
+arms <- c('A', 'B', 'A', 'A', 'B')
+table(arms)
+```
+
+In Python we build the tally explicitly, which exposes the
+`dict` and the loop, and then show the concise idiom:
+
+```python
+arms = ['A', 'B', 'A', 'A', 'B']
+counts = {}
+for a in arms:
+    counts[a] = counts.get(a, 0) + 1
+counts                      # {'A': 3, 'B': 2}
+```
+
+The standard library offers the concise form, closer in spirit
+to `table()`:
+
+```python
+from collections import Counter
+Counter(arms)              # Counter({'A': 3, 'B': 2})
+```
+
+We note the trade-off: the explicit loop teaches the mechanics,
+while `Counter` is what one writes in practice. Both return a
+`dict`-like object the reader can index by arm.
+
+## Homework
+
+Attempt each problem before checking the solution.
+
+1. **Container choice.** For each of the following, name the
+   Python container you would use and its closest R analogue:
+   an ordered set of subject IDs that will grow; a fixed
+   coordinate pair; a lookup from subject ID to age; the set
+   of distinct sites in a study.
+
+2. **List is not a vector.** Predict the result of
+   `[1, 2, 3] * 2` and explain why it differs from the R
+   result of `c(1, 2, 3) * 2`.
+
+3. **String methods.** Given `s = 'HbA1c_change'`, produce
+   `'hba1c change'` using string methods only. State the
+   `stringr` or base R calls that would do the same.
+
+4. **Comprehension.** Write a comprehension that returns the
+   squares of the even numbers in `range(20)`. Then write the
+   equivalent using an explicit loop, and say which you find
+   clearer.
+
+5. **Default arguments.** Write a function `greet(name,
+   greeting='Hello')` and call it both with and without the
+   second argument. Then explain why
+   `def f(x, acc=[])` is a trap and how to fix it.
+
+6. **Variadic arguments.** Write a function that accepts any
+   number of positional numbers and returns their mean, using
+   `*args`. Relate `*args` to R's `...`.
+
+7. **None versus NA.** Write an expression that is true when a
+   variable `v` is `None`. Explain, in one or two sentences,
+   why Python's `None` maps more naturally onto R's `NULL`
+   than onto R's `NA`.
+
+## Solutions
+
+::: {.callout-note icon=false collapse=true}
+## Solutions
+
+**Problem 1.** Placeholder: a `list` (growable IDs), a `tuple`
+(fixed pair), a `dict` (ID to age), and a `set` (distinct
+sites); the R analogues are a list or vector, a length-two
+vector, a named list, and `unique()`.
+
+**Problem 2.** Placeholder: `[1, 2, 3, 1, 2, 3]`, list
+repetition rather than elementwise doubling, because base
+Python does not vectorize.
+
+**Problem 3.** Placeholder: `s.lower().replace('_', ' ')`; R
+uses `gsub('_', ' ', tolower(s))`.
+
+**Problem 4.** Placeholder: `[x**2 for x in range(20) if x % 2
+== 0]`; the loop form appends inside a `for`.
+
+**Problem 5.** Placeholder: the default list is created once
+and shared across calls; use `acc=None` and set it inside.
+
+**Problem 6.** Placeholder: `def mean(*xs): return sum(xs) /
+len(xs)`; `*args` gathers extra positionals as R's `...` does.
+
+**Problem 7.** Placeholder: `v is None`; `None` denotes a
+genuine absence like `NULL`, not a missing measurement like
+`NA`.
+:::
+
+## What's next
+
+Day 3 restores the vectorized comfort of R. We introduce NumPy
+arrays as the counterpart of R vectors and matrices, then
+pandas `Series` and `DataFrame` as the counterpart of the
+tibble, and translate `dplyr` verbs (`filter`, `select`,
+`group_by`, joins) into their pandas equivalents.
