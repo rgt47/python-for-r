@@ -68,6 +68,17 @@ Python `renv.lock`: commit it, and recreate the environment
 from it on another machine rather than reinstalling by hand.
 :::
 
+::: {.callout-tip}
+## A language-agnostic option: zzcollab
+
+The rgtlab `zzcollab` tool (<https://github.com/rgt47/zzcollab>)
+builds a Docker-based reproducible compendium. Although it grew
+out of R practice, the container it produces is language-agnostic,
+so a reader who already uses it for R work can host a Python
+project in the same framework rather than maintaining two separate
+reproducibility stacks.
+:::
+
 ### Testing with pytest
 
 Automated tests are as valuable in Python as in R. `pytest`
@@ -113,7 +124,11 @@ cells, which is often the cleanest path during a migration.
 Interoperability runs in both directions. From R, `reticulate`
 calls Python, as we saw on Day 4. From Python, the `rpy2`
 package calls R, so an established R routine can be invoked
-without rewriting it.
+without rewriting it. This matters for the reader's own toolbox:
+the rgtlab R packages (`zztable1`, `zzlongplot`, and the rest of
+the suite at <https://github.com/rgt47>) remain callable from
+Python through `rpy2`, so adopting Python need not mean
+abandoning an R routine that already works.
 
 ```python
 import rpy2.robjects as ro
