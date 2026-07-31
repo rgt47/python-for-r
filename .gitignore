@@ -1,14 +1,33 @@
+# Quarto
 _book/
 .quarto/
+/.quarto/
+**/*.quarto_ipynb
 *.html
 !nav-toggle.html
 *.pdf
+
+# R
 .Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
+*.Rproj
+inst/doc
+
+# renv
+renv/library/
+renv/staging/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# zzcollab
+.make/
+.zzcollab.log
+
+# OS / editors
 .DS_Store
 node_modules/
-
-/.quarto/
-**/*.quarto_ipynb
