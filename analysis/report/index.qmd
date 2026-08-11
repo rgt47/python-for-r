@@ -1,8 +1,8 @@
 # Welcome {.unnumbered .unlisted}
 
 This is the online version of **Python for R Programmers: A
-One-Week Workshop for R Users Learning Python** by The
-rgtlab Curriculum Project, a short workshop for statisticians
+One-Week Boot Camp for R Users Learning Python** by The
+rgtlab Curriculum Project, a short boot camp for statisticians
 and data analysts who are already fluent in R and want to
 become productive in Python.
 

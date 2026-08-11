@@ -1,4 +1,4 @@
-# Python for R Programmers: A One-Week Workshop
+# Python for R Programmers: A One-Week Boot Camp
 *2026-07-29 10:00 PDT*
 
 A short workshop for statisticians and data analysts who are

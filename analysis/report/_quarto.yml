@@ -6,7 +6,7 @@ project:
 
 book:
   title: 'Python for R Programmers'
-  subtitle: 'A One-Week Workshop for R Users Learning Python'
+  subtitle: 'A One-Week Boot Camp for R Users Learning Python'
   author: 'The rgtlab Curriculum Project'
   date: today
   date-format: 'YYYY-MM-DD'

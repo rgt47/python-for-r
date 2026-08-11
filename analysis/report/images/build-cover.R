@@ -50,7 +50,7 @@ draw_cover <- function(path, width, height, with_text) {
       col = "#f2f5f8", cex = 3.2, font = 2)
     graphics::text(0.5, 0.52, "R Programmers",
       col = "#f2f5f8", cex = 3.2, font = 2)
-    graphics::text(0.5, 0.40, "A One-Week Workshop",
+    graphics::text(0.5, 0.40, "A One-Week Boot Camp",
       col = "#f2f5f8", cex = 1.5, font = 3)
     graphics::text(0.5, 0.08, "The rgtlab Curriculum Project",
       col = grDevices::adjustcolor("#f2f5f8", 0.85),
