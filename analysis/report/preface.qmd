@@ -2,17 +2,17 @@
 
 This volume is a one-week workshop for readers who are
 already comfortable in R and want to become productive in
-Python. It assumes the R fluency developed in the companion
-volume *R for Biostatistics*; where that book makes a student
+Python. We assume the R fluency developed in the companion
+volume *R for Biostatistics*. Where that book makes a student
 functional in R, this one makes an R user functional in a
 second language. We do not assume any prior Python.
 
-The design constraint is deliberate: five lectures, ten hours
-of homework, and the reader finishes the week able to read and
+The design constraint here is deliberate. Five lectures and
+ten hours of homework should leave the reader able to read and
 write everyday scientific Python and to move an analysis
-between the two languages. The constraint is met by leaning on
-what the reader already knows. Python is a large language; the
-great majority of its surface area is omitted here. What
+between the two languages. We meet this constraint by leaning
+on what the reader already knows. Python is a large language,
+and we omit the great majority of its surface area. What
 remains is the subset that a practicing data analyst uses
 daily, taught by contrast with the R the reader has already
 internalized.
@@ -20,9 +20,9 @@ internalized.
 ## Why an R user should learn Python
 
 The case for a second language is not that Python is better
-than R. It is that the two languages have different centers of
-gravity, and a researcher who commands both can choose the
-right tool for a given task rather than forcing every task
+than R. It is, rather, that the two languages have different
+centers of gravity. A researcher who commands both can choose
+the right tool for a given task rather than forcing every task
 into one. Consider three situations a working analyst meets:
 
 - A collaborator ships a model as a scikit-learn pipeline, and
@@ -37,13 +37,13 @@ into one. Consider three situations a working analyst meets:
 
 Each of these is a case where fluency in a second language
 removes a barrier rather than adds one. We note that the goal
-is not to abandon R; it is to make the boundary between the
+is not to abandon R. It is to make the boundary between the
 two languages a bridge the analyst can cross in either
 direction.
 
 ## What this book covers
 
-Five days, one chapter each:
+We organize the material as five days, one chapter each:
 
 1. **Orientation and setup.** The Python mental model for R
    users; installing Python with `uv`, `venv`, and conda; the
@@ -80,7 +80,7 @@ solutions provided.
 
 ## What this book does not cover
 
-The book deliberately omits, and points elsewhere for, nearly
+We deliberately omit, and point elsewhere for, nearly
 everything beyond the daily core:
 
 - Python-language internals (the data model in depth,
@@ -97,16 +97,17 @@ everything beyond the daily core:
   *Statistical Computing in the Age of AI*.
 
 The workshop is intentionally narrow. The reader finishes Day
-5 able to work fluently in everyday scientific Python, leaving
-the follow-on volumes free to teach the methods and systems
-that surround it.
+5 able to work fluently in everyday scientific Python. This
+leaves the follow-on volumes free to teach the methods and
+systems that surround it.
 
 ## How this book is meant to be used
 
-The five-day cadence is the spine. A reader starting the week
-having never run a Python script can finish the week moving an
-analysis between R and Python. The cadence assumes roughly 3
-hours of focused work per day:
+The five-day cadence is the spine of the book. A reader
+starting the week having never run a Python script should be
+able to finish the week moving an analysis between R and
+Python. The cadence assumes roughly 3 hours of focused work
+per day:
 
 - **Hour 1:** Read the chapter, running every example in your
   own Python session as you reach it. A second language is
@@ -115,14 +116,14 @@ hours of focused work per day:
   at the end of each chapter; check yourself only after
   attempting each problem.
 
-The examples in this book are shown for a Unix-style shell
+We show the examples in this book for a Unix-style shell
 (macOS Terminal, Linux, or a Unix shell on Windows such as Git
-Bash or WSL). Where a step differs on Windows, the difference
-is noted.
+Bash or WSL). Where a step differs on Windows, we note the
+difference.
 
 ## Prerequisites
 
-The book assumes:
+We assume:
 
 - A working laptop running macOS, Windows, or Linux.
 - Working fluency in R at the level of the companion volume
@@ -134,17 +135,17 @@ The book assumes:
 - No prior exposure to Python.
 
 Prior completion of *R for Biostatistics* is the natural
-entry point, since every Python construct here is introduced
-by contrast with its R counterpart. A reader without that R
+entry point, since we introduce every Python construct here by
+contrast with its R counterpart. A reader without that R
 background can still follow the Python, but the translational
-scaffolding will do less work for them.
+scaffolding will do less work for such a reader.
 
 ## Acknowledgments
 
-This workshop consolidates patterns developed while teaching R
-users to read and write scientific Python. Wes McKinney's
-*Python for Data Analysis* and Jake VanderPlas's *Python Data
-Science Handbook* provide the technical scaffolding; the
-translational pedagogy reflects experience with what an
-established R user actually needs, as distinct from what a
-first-time programmer needs.
+This workshop consolidates patterns we developed while
+teaching R users to read and write scientific Python. Wes
+McKinney's *Python for Data Analysis* and Jake VanderPlas's
+*Python Data Science Handbook* provide the technical
+scaffolding. The translational pedagogy reflects our
+experience with what an established R user actually needs, as
+distinct from what a first-time programmer needs.

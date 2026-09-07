@@ -112,15 +112,15 @@ production analysis usually lives in scripts, not notebooks.
 
 For an editor we recommend Positron, Posit's data science IDE,
 ahead of the classic Jupyter interface. Positron will feel
-familiar to an RStudio user: it offers the same
+familiar to an RStudio user. It offers the same
 script-and-console workflow, a Variables pane, and a Data
 Explorer for pandas data frames, and it edits and runs both
 `.py` scripts and `.ipynb` notebooks in one place. It is
-multilingual, so the reader's R and Python work live in a single
-environment. A reader who prefers a notebook-only experience may
-still use Jupyter, but for an R user coming from RStudio, Positron
-is the more natural home, and it is the environment we recommend
-throughout this book.
+multilingual, so the reader's R and Python work can live in a
+single environment. A reader who prefers a notebook-only
+experience may still use Jupyter. For an R user coming from
+RStudio, however, we find Positron the more natural home, and
+it is the environment we recommend throughout this book.
 
 ### import versus library()
 

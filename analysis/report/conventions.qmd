@@ -80,11 +80,11 @@ where an R habit produces a surprising result in Python.
 ## Naming the two languages
 
 Throughout, we mark which language a construct belongs to
-whenever it could be ambiguous. Python objects and methods are
-named in full (`list.append()`, not merely `append`) so that
-they are unambiguous. R functions are named with their package
-where it matters (`dplyr::filter`), since the same bare name
-may mean different things in the two languages.
+whenever it could be ambiguous. We name Python objects and
+methods in full (`list.append()`, not merely `append`) so that
+they remain unambiguous. We name R functions with their
+package where it matters (`dplyr::filter`), since the same
+bare name may mean different things in the two languages.
 
 ## Cross-references
 
@@ -92,12 +92,12 @@ Within this book, sections are referenced by their Quarto
 label (`@sec-day1`, `@sec-pandas-groupby`). These resolve to
 clickable links in HTML and section numbers in PDF.
 
-References to the companion volumes *R for Biostatistics* and
-*Git and GitHub for Biostatistics* use **prose pointers**
-rather than Quarto cross-references, because cross-references
-do not resolve across separate books. For example: 'see the
-data-frames chapter of the companion *R for Biostatistics*
-volume'.
+For references to the companion volumes *R for Biostatistics*
+and *Git and GitHub for Biostatistics*, we use **prose
+pointers** rather than Quarto cross-references, since
+cross-references do not resolve across separate books. For
+example: 'see the data-frames chapter of the companion *R for
+Biostatistics* volume'.
 
 ## Chapter structure
 

@@ -2,25 +2,25 @@
 
 This is the online version of **Python for R Programmers: A
 One-Week Boot Camp for R Users Learning Python** by The
-rgtlab Curriculum Project, a short boot camp for statisticians
+rgtlab Curriculum Project. We have written it for statisticians
 and data analysts who are already fluent in R and want to
 become productive in Python.
 
-The book covers what a working R user needs in order to read,
+We begin from what a working R user needs in order to read,
 write, and run everyday scientific Python: the Python mental
 model and how it differs from R; the core data structures and
 control flow; NumPy and pandas for numerical and tabular work;
 the visualization and modeling stack; and reproducible
-project structure with interoperability back to R. It is
-designed for **five consecutive days** of work: roughly one
-hour of lecture content each day, two hours of homework, no
-examinations.
+project structure with interoperability back to R. The book is
+designed for **five consecutive days** of work, roughly one
+hour of lecture content each day and two hours of homework,
+with no examinations.
 
 The organizing principle is translation. We assume the reader
-knows the R idiom already, so every Python construct is
-introduced by contrast with its R counterpart. That is, we do
-not teach programming from scratch; we teach a second language
-to a reader who already thinks in a first one. Every chapter
+already knows the R idiom, so we introduce every Python
+construct by contrast with its R counterpart. That is, we do
+not teach programming from scratch. We teach a second language
+to a reader who already thinks in a first one. Each chapter
 opens with an R idiom the reader knows, develops the Python
 equivalent, and returns to compare what each language makes
 easy and what each makes awkward.
@@ -40,14 +40,14 @@ This workshop is a companion to a broader curriculum series:
   capability classes, RAG, agents, evaluation,
   regulation, deployment.
 
-A reader who completes *R for Biostatistics* has the R
-fluency this workshop assumes; a reader who completes this
-workshop can move between the two languages as a given problem
-demands.
+A reader who has completed *R for Biostatistics* has the R
+fluency this workshop assumes. A reader who completes this
+workshop should be able to move between the two languages as
+a given problem demands.
 
-See the [Preface](preface.qmd) for the design rationale
-and the [Conventions](conventions.qmd) page for visual
-cues.
+The reader is referred to the [Preface](preface.qmd) for the
+design rationale and to the [Conventions](conventions.qmd)
+page for the visual cues used throughout.
 
 ## License
 
