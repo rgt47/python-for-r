@@ -10,7 +10,7 @@ Each day has the same shape:
 
 - **Lecture content (~1 hour).** Read the chapter, running
   each example in your own Python session as you encounter it.
-  Do not skip the code; the chapter is designed to be read
+  Do not skip the code. The chapter is designed to be read
   with a REPL open and a scratch script at hand.
 - **Homework (~2 hours).** Five to eight problems, with worked
   solutions at the end of the chapter. Attempt each problem
