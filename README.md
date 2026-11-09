@@ -45,4 +45,4 @@ It sits alongside these companion volumes:
 
 ## License
 
-Prose: CC BY-NC-ND 4.0. Code: CC0 1.0.
+Prose: CC BY 4.0. Code samples: MIT. Repository code: GPL-3.
